@@ -13,7 +13,6 @@
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-        
         :root {
             --primary: #ed1f24;
             --primary-dark: #c4191e;
@@ -184,6 +183,7 @@
             justify-content: center;
             transition: var(--transition);
             padding: 0;
+            z-index: 1001;
         }
         
         .mobile-toggle:hover, .mobile-toggle:active {
@@ -794,13 +794,6 @@
             line-height: 1.5;
         }
         
-        .sport-card:nth-child(2) li:nth-child(2),
-        .sport-card:nth-child(2) li:nth-child(4),
-        .sport-card:nth-child(2) li:nth-child(8),
-        .sport-card:nth-child(2) li:nth-child(9) {
-            color: var(--female-color);
-        }
-        
         /* Location Section - Mobile Optimized */
         .location-section {
             background-color: var(--light);
@@ -1313,11 +1306,7 @@
             
             .mobile-toggle {
                 display: flex;
-                z-index: 1000;
-            }
-            
-            .mobile-toggle.active i {
-                transform: rotate(90deg);
+                z-index: 1001;
             }
             
             /* Improved touch targets */
@@ -1545,7 +1534,7 @@
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="container">
-            <h1>Devenez un <span>Champion</span>⚡</h1>
+            <h1>Devenez un <span>Champion</span></h1>
             <p>Rejoignez Olympia Champions GYM ⚡, la salle de sport de référence à Borj Cédria. Équipements modernes, coaches certifiés et ambiance motivante pour atteindre vos objectifs fitness.</p>
             <div class="hero-buttons">
                 <a href="#planning" class="cta-button voir-planning">Voir le planning</a>
@@ -2112,7 +2101,6 @@
                                 </div>
                             </div>
                             
-                            <!-- FIXED: Missing closing brace in class attribute -->
                             <div class="activity-item arts-martiaux">
                                 <div class="activity-time">
                                     <i class="far fa-clock"></i> 18:30
@@ -2356,14 +2344,14 @@
                         <p>Cardio, fitness et danse en groupe pour une motivation maximale.</p>
                         <ul>
                             <li><strong>CAF</strong> (Coach Hamza)</li>
-                            <li><strong>Zumba</strong> (Coach Vesna)</li>
                             <li><strong>Spinning</strong> (Coach Khalil)</li>
-                            <li><strong>Aerobics</strong> (Coach Vesna)</li>
                             <li><strong>Circuit Training</strong> (Coach Hamza)</li>
-                            <li><strong>Cross Training</strong> (Coach Hamza)</li>
                             <li><strong>Step</strong> (Coach Khalil)</li>
-                            <li><strong>Danse Orientale</strong> (Coach Vesna)</li>
-                            <li><strong>Pilates</strong> (Coach Vesna)</li>
+                            <li><strong>Cross Training</strong> (Coach Hamza)</li>
+                            <li style="color: #ed1f24;"><strong>Aerobics</strong> <span>(Coach Vesna) •</span></li>
+                            <li style="color: #ed1f24;"><strong>Zumba</strong> <span style="color: #ed1f24;">(Coach Vesna) •</span></li>
+                            <li style="color: #ed1f24;"><strong>Danse orientale</strong> <span style="color: #ed1f24;">(Coach Vesna) •</span></li>
+                            <li style="color: #ed1f24;"><strong>Pilates</strong> <span style="color: #ed1f24;">(Coach Vesna) •</span></li>
                         </ul>
                     </div>
                 </div>
@@ -2425,7 +2413,7 @@
                             </div>
                             <div>
                                 <h4>Email</h4>
-                                <p>OlympiaChampions123@gmail.com</p>
+                                <p>olympia.champions.gym@gmail.com</p>
                             </div>
                         </div>
                     </div>
@@ -2492,13 +2480,20 @@
     </footer>
 
     <script>
-        // Enhanced Mobile Navigation Toggle
+        // ============================================
+        // FIXED MOBILE NAVIGATION TOGGLE
+        // ============================================
+        
+        // Get DOM elements
         const mobileToggle = document.getElementById('mobileToggle');
         const mainNav = document.getElementById('mainNav');
         const body = document.body;
         
+        // Fixed mobile menu toggle function
         function toggleMobileMenu() {
             const isActive = mainNav.classList.toggle('active');
+            
+            // Update toggle button
             mobileToggle.setAttribute('aria-expanded', isActive);
             mobileToggle.innerHTML = isActive 
                 ? '<i class="fas fa-times"></i>' 
@@ -2507,21 +2502,27 @@
             // Prevent body scroll when menu is open
             body.style.overflow = isActive ? 'hidden' : '';
             
-            // Add/remove active class to toggle button
+            // Update button class for styling
             mobileToggle.classList.toggle('active', isActive);
         }
         
-        mobileToggle.addEventListener('click', toggleMobileMenu);
+        // Add event listener to mobile toggle button
+        mobileToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleMobileMenu();
+        });
         
         // Close mobile menu when clicking on a link
         const navLinks = document.querySelectorAll('nav a');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
-                mainNav.classList.remove('active');
-                mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-                mobileToggle.setAttribute('aria-expanded', 'false');
-                mobileToggle.classList.remove('active');
-                body.style.overflow = '';
+                if (window.innerWidth < 768) {
+                    mainNav.classList.remove('active');
+                    mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+                    mobileToggle.setAttribute('aria-expanded', 'false');
+                    mobileToggle.classList.remove('active');
+                    body.style.overflow = '';
+                }
             });
         });
         
@@ -2529,7 +2530,7 @@
         document.addEventListener('click', (e) => {
             if (mainNav.classList.contains('active') && 
                 !mainNav.contains(e.target) && 
-                !mobileToggle.contains(e.target)) {
+                e.target !== mobileToggle) {
                 toggleMobileMenu();
             }
         });
@@ -2541,7 +2542,9 @@
             }
         });
         
-        // Enhanced smooth scrolling for anchor links
+        // ============================================
+        // SMOOTH SCROLLING
+        // ============================================
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 const targetId = this.getAttribute('href');
@@ -2573,7 +2576,9 @@
             });
         });
         
-        // Enhanced active section highlighting
+        // ============================================
+        // ACTIVE NAVIGATION HIGHLIGHTING
+        // ============================================
         window.addEventListener('scroll', () => {
             let current = '';
             const sections = document.querySelectorAll('section[id], footer[id]');
@@ -2595,7 +2600,9 @@
             });
         });
         
-        // Enhanced day schedule toggle with keyboard support
+        // ============================================
+        // SCHEDULE DAY TOGGLE FUNCTIONALITY
+        // ============================================
         function toggleDay(day) {
             const content = document.getElementById(`${day}-content`);
             const header = content.parentElement.querySelector('.day-header');
@@ -2641,8 +2648,11 @@
             header.setAttribute('tabindex', '0');
         });
         
-        // Initialize all days as closed
+        // ============================================
+        // INITIALIZATION
+        // ============================================
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all days as closed
             const allDayContents = document.querySelectorAll('.day-content');
             const allDayHeaders = document.querySelectorAll('.day-header');
             
@@ -2682,8 +2692,11 @@
             });
         });
         
+        // ============================================
+        // PERFORMANCE & UX OPTIMIZATIONS
+        // ============================================
+        
         // Handle orientation change for better mobile experience
-        let initialOrientation = window.screen.orientation.type;
         window.addEventListener('orientationchange', function() {
             // Close mobile menu on orientation change
             if (mainNav.classList.contains('active')) {
@@ -2702,7 +2715,6 @@
             if (!scrollTimeout) {
                 scrollTimeout = setTimeout(function() {
                     scrollTimeout = null;
-                    // Actual scroll handling is done in the separate scroll event listener above
                 }, 100);
             }
         });
